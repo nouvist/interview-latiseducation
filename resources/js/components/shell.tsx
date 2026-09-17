@@ -1,6 +1,7 @@
 import { ComponentProps, PropsWithChildren, useState } from "react";
 import * as Lucide from "lucide-react";
 import { cn } from "@/lib/utils";
+import { router } from "@inertiajs/react";
 
 export enum ShellNavigation {
     data,
@@ -9,17 +10,25 @@ export enum ShellNavigation {
 }
 
 export interface ShellProps extends PropsWithChildren {
+    title?: string;
     navigation?: ShellNavigation;
 }
 
-export default function Shell({ children }: ShellProps) {
-    const [navigation, handleNavigation] = useState(ShellNavigation.data);
+export default function Shell({ title, navigation, children }: ShellProps) {
+    function handleNavigation(navigation: ShellNavigation) {
+        const url = {
+            [ShellNavigation.data]: "/dashboard",
+            [ShellNavigation.profile]: "/profile",
+            [ShellNavigation.about]: "/about",
+        }[navigation];
+        router.visit(url);
+    }
 
     return (
-        <div className="flex p-4 gap-4">
+        <div key="Shell" className="flex p-4 gap-4">
             <div
                 className="
-                    h-min sticky top-4
+                    h-min sticky top-4 z-10
                     outline-1 rounded-lg bg-white outline-gray-400 p-1
                 "
             >
@@ -49,6 +58,15 @@ export default function Shell({ children }: ShellProps) {
                 </_Navigation>
             </div>
             <div className="flex-1 max-w-5xl">
+                <h1
+                    className="
+                        sticky w-max px-4 py-2 top-4 mb-2 z-0
+                        outline-1 rounded-lg bg-white outline-gray-400 p-1
+                        text-xl font-bold
+                    "
+                >
+                    {title}
+                </h1>
                 <div>{children}</div>
             </div>
         </div>
@@ -79,7 +97,7 @@ function _Navigation({
             {children}
             <div
                 className={cn(
-                    "absolute left-0 w-1 h-2 opacity-0 rounded-full bg-red-400 transition-all",
+                    "absolute left-0 w-1 h-2 opacity-0 rounded-full bg-red-400",
                     active && "h-6 opacity-100",
                 )}
             />
