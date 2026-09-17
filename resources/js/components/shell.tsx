@@ -1,7 +1,7 @@
-import { ComponentProps, PropsWithChildren, useState } from "react";
-import * as Lucide from "lucide-react";
 import { cn } from "@/lib/utils";
 import { router } from "@inertiajs/react";
+import * as Lucide from "lucide-react";
+import { ComponentProps, PropsWithChildren } from "react";
 
 export enum ShellNavigation {
     data,
@@ -29,7 +29,7 @@ export default function Shell({ title, navigation, children }: ShellProps) {
             <div
                 className="
                     h-min sticky top-4 z-10
-                    outline-1 rounded-lg bg-white outline-gray-400 p-1
+                    border rounded-lg bg-white border-gray-400 p-1
                 "
             >
                 <_Navigation
@@ -61,7 +61,7 @@ export default function Shell({ title, navigation, children }: ShellProps) {
                 <h1
                     className="
                         sticky w-max px-4 py-2 top-4 mb-2 z-0
-                        outline-1 rounded-lg bg-white outline-gray-400 p-1
+                        border rounded-lg bg-white border-gray-400 p-1
                         text-xl font-bold
                     "
                 >
@@ -104,7 +104,7 @@ function _Navigation({
             <div
                 className="
                     pointer-events-none absolute w-max px-3 py-1
-                    outline-1 rounded-lg bg-white outline-gray-400
+                    border rounded-lg bg-white border-gray-400
                     transition-all left-12 opacity-0 group-hover:left-16 group-hover:opacity-100
                 "
             >
