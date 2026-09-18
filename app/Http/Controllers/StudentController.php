@@ -54,7 +54,7 @@ class StudentController extends Controller
             $search = $param['search']['value'];
             $query->where(function ($builder) use ($columns, $search) {
                 foreach ($columns as $column) {
-                    $builder->orWhere($column, 'like', '%{$search}%');
+                    $builder->orWhere($column, 'like', "%{$search}%");
                 }
             });
         }
