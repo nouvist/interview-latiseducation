@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import auth from "@/routes/auth";
 import { router } from "@inertiajs/react";
 import * as Lucide from "lucide-react";
 import { ComponentProps, PropsWithChildren } from "react";
@@ -22,6 +23,10 @@ export default function Shell({ title, navigation, children }: ShellProps) {
             [ShellNavigation.about]: "/about",
         }[navigation];
         router.visit(url);
+    }
+
+    function handleLogout() {
+        router.visit(auth.logout());
     }
 
     return (
@@ -53,7 +58,7 @@ export default function Shell({ title, navigation, children }: ShellProps) {
                 >
                     <Lucide.BadgeInfo />
                 </_Navigation>
-                <_Navigation tooltip="Keluar">
+                <_Navigation tooltip="Keluar" onClick={handleLogout}>
                     <Lucide.LogOut />
                 </_Navigation>
             </div>

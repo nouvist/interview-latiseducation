@@ -50,6 +50,10 @@
             "pnpm install",
             "pnpm run build"
         ],
+        "helper": [
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:models --nowrite"
+        ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
             "@php artisan dev"
