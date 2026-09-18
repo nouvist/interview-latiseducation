@@ -1,14 +1,15 @@
 import { Form as RawForm } from "@inertiajs/react";
-import { LucideCheck, LucideCircleX } from "lucide-react";
+import { LucideCheck, LucideCircleX, LucideSave } from "lucide-react";
 import { ComponentProps, Fragment, PropsWithChildren, ReactNode } from "react";
 import Button from "./button";
 
 export interface FormProps extends ComponentProps<typeof RawForm> {
     message?: string;
+    bottom?: React.ReactNode;
     children: React.ReactNode;
 }
 
-function Form({ message, children, ...props }: FormProps) {
+function Form({ message, bottom, children, ...props }: FormProps) {
     return (
         <RawForm {...props}>
             <table className="w-full border-separate border-spacing-y-2 box-border">
@@ -25,8 +26,12 @@ function Form({ message, children, ...props }: FormProps) {
                     {message}
                 </p>
             )}
-            <div className="flex justify-end">
-                <Button type="submit">Simpan</Button>
+            <div className="flex justify-end gap-2">
+                {bottom}
+                <Button type="submit">
+                    <LucideSave className="mr-2" />
+                    <span>Simpan</span>
+                </Button>
             </div>
         </RawForm>
     );

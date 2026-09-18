@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Response;
+use Storage;
 use Validator;
 
 class StudentController extends Controller
@@ -18,15 +18,23 @@ class StudentController extends Controller
 
     public function show(Student $student)
     {
-        return inertia('student', array_merge(
-            ["student" => $student],
-            ["message" => session('message')]
-        ));
+        if ($student->photo) {
+            $student = array_merge(
+                $student->toArray(),
+                ['photo_url' => Storage::disk('public')->url($student->photo)]
+            );
+        }
+        return inertia('student', ['student' => $student]);
     }
 
     public function create()
     {
         return inertia('student');
+    }
+
+    public function showPhoto(Student $student)
+    {
+        return inertia('student.photo', ['student' => $student]);
     }
 
     public function datatables(Request $request)
@@ -74,18 +82,23 @@ class StudentController extends Controller
             'draw' => (int) ($param['draw'] ?? 0),
             'recordsTotal' => $total,
             'recordsFiltered' => $filtered,
-            'data' => $query->get(),
+            'data' => $query->get()->map(function ($student) {
+                if (!$student->photo) return $student;
+                return array_merge(
+                    $student->toArray(),
+                    ['photo_url' => Storage::disk('public')->url($student->photo)]
+                );
+            }),
         ]);
     }
 
 
     public function store(Request $request)
     {
-        $id = $request->input("id");
+        $id = $request->input('id');
         $validator = $this->validator($request, $id);
-        if ($validator->fails()) {
-            return back()->withErrors($validator);
-        }
+        if ($validator->fails()) return back()->withErrors($validator);
+
 
         $student = null;
         if ($id) {
@@ -95,10 +108,28 @@ class StudentController extends Controller
             $student = Student::create($validator->validated());
         }
 
-        return Response::redirectTo(route("students.show", $student))
-            ->with(["message" => "Berhasil disimpan."]);
+        return Response::redirectTo(route('students.index', $student))
+            ->with(['message" => "Berhasil disimpan.']);
     }
 
+    public function storePhoto(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|integer',
+            'file' => 'required|file|mimes:jpg,jpeg,png|max:100',
+        ]);
+        if ($validator->fails()) return back()->withErrors($validator);
+        $body = $validator->validated();
+        $student = Student::findOrFail($body['id']);
+
+        $disk = Storage::disk('public');
+        if ($student->photo && $disk->exists($student->photo)) $disk->delete($student->photo);
+        $next = $request->file('file')->store('photos', 'public');
+        $student->photo = $next;
+        $student->save();
+        return Response::redirectTo(route('students.show', $student))
+            ->with(['message" => "Foto berhasil diubah.']);
+    }
 
     public function destroy(Student $student) {}
 
@@ -106,10 +137,10 @@ class StudentController extends Controller
     protected function validator(Request $request, ?int $id = null)
     {
         return Validator::make($request->all(), [
-            "name" => "required",
-            "email" => ["required", "email", Rule::unique('students', 'email')->ignore($id)],
-            "number" => ["required", "integer", Rule::unique('students', 'number')->ignore($id)],
-            "institution" => "required",
+            'name' => 'required',
+            'email' => ['required', 'email', Rule::unique('students', 'email')->ignore($id)],
+            'number' => ['required', 'integer', Rule::unique('students', 'number')->ignore($id)],
+            'institution' => 'required',
         ]);
     }
 }

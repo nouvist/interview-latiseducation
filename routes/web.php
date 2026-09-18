@@ -27,9 +27,11 @@ Route::controller(StudentController::class)->middleware('auth')->group(function 
     Route::get('/dashboard', 'index')->name('students.index');
     Route::get('/student/new', 'create')->name('students.create');
     Route::get('/student/{student}', 'show')->name('students.show');
+    Route::get('/student/{student}/photo', 'showPhoto')->name('students.showPhoto');
 
     Route::get('/api/students/datatables', 'datatables')->name('students.datatables');
     Route::post('/api/students', 'store')->name('students.store');
+    Route::post('/api/students/photo', 'storePhoto')->name('students.storePhoto');
 
     Route::get('/api/students/{student}/edit', 'edit')->name('students.edit');
     Route::delete('/api/students/{student}', 'destroy')->name('students.destroy');

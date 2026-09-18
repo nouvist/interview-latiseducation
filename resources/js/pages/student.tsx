@@ -1,9 +1,11 @@
+import Button from "@/components/button";
 import Form from "@/components/form";
 import Input from "@/components/input";
 import Select from "@/components/select";
 import Shell, { ShellNavigation } from "@/components/shell";
 import students from "@/routes/students";
 import { Student } from "@/types";
+import { Link } from "@inertiajs/react";
 
 export interface StudentPageProps {
     student?: Student;
@@ -21,10 +23,20 @@ export default function StudentPage({
             title={`Data Siswa: ${student?.name ?? "Baru"}`}
             navigation={ShellNavigation.data}
         >
-            <Form action={students.store()} message={message}>
+            <Form
+                action={students.store()}
+                message={message}
+                bottom={
+                    student?.id && (
+                        <Link href={students.showPhoto({ id: student.id })}>
+                            <Button>Ganti Foto</Button>
+                        </Link>
+                    )
+                }
+            >
                 {student?.id && (
                     <Form.HiddenField>
-                        <Input name="id" defaultValue={student!.id} />
+                        <input name="id" defaultValue={student!.id} />
                     </Form.HiddenField>
                 )}
                 <Form.Field title="Nama" error={errors.name}>
@@ -46,6 +58,14 @@ export default function StudentPage({
                         <option value="TutorIndonesia">Tutor Indonesia</option>
                     </Select>
                 </Form.Field>
+                {student?.photo_url && (
+                    <Form.Field title="Foto">
+                        <img
+                            className="w-32 h-32 object-cover"
+                            src={student.photo_url}
+                        />
+                    </Form.Field>
+                )}
             </Form>
         </Shell>
     );

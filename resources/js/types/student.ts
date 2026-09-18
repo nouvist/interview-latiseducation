@@ -7,4 +7,5 @@ export interface Student {
     number: string;
     institution: StudentInstitution;
     photo?: string;
+    photo_url?: string;
 }
