@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('number')->unique();
-            $table->enum('organization', ['LatisEducation', 'TutorIndonesia']);
+            $table->enum('institution', ['LatisEducation', 'TutorIndonesia']);
             $table->string('photo')->nullable();
             $table->timestamps();
         });

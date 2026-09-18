@@ -1,18 +1,30 @@
 import { Form as RawForm } from "@inertiajs/react";
-import { LucideCircleX } from "lucide-react";
-import { ComponentProps, Fragment, ReactNode } from "react";
+import { LucideCheck, LucideCircleX } from "lucide-react";
+import { ComponentProps, Fragment, PropsWithChildren, ReactNode } from "react";
 import Button from "./button";
 
 export interface FormProps extends ComponentProps<typeof RawForm> {
+    message?: string;
     children: React.ReactNode;
 }
 
-function Form({ children, ...props }: FormProps) {
+function Form({ message, children, ...props }: FormProps) {
     return (
         <RawForm {...props}>
             <table className="w-full border-separate border-spacing-y-2 box-border">
                 <tbody>{children}</tbody>
             </table>
+            {message && (
+                <p
+                    className="
+                        w-full flex px-3 h-10 gap-2 mb-2 items-center
+                        border rounded-lg bg-blue-50 border-blue-400
+                    "
+                >
+                    <LucideCheck />
+                    {message}
+                </p>
+            )}
             <div className="flex justify-end">
                 <Button type="submit">Simpan</Button>
             </div>
@@ -52,6 +64,11 @@ function FormField({ title, error, children }: FormFieldProps) {
     );
 }
 
+function FormHiddenField({ children }: PropsWithChildren) {
+    return <div className="hidden">{children}</div>;
+}
+
 export default Object.assign(Form, {
     Field: FormField,
+    HiddenField: FormHiddenField,
 });

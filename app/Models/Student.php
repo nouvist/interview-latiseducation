@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['name', 'email', 'number', 'organization', 'photo'])]
+#[Fillable(['name', 'email', 'number', 'institution', 'photo'])]
 class Student extends Model
 {
     use HasFactory;

@@ -1,6 +1,6 @@
 import Shell, { ShellNavigation } from "@/components/shell";
 
-export default function About() {
+export default function AboutPage() {
     return (
         <Shell title="Tentang" navigation={ShellNavigation.about}>
             <p>

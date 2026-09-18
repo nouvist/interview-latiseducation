@@ -5,13 +5,13 @@ import auth from "@/routes/auth";
 import { Form } from "@inertiajs/react";
 import { LucideCircleX, LucideLock, LucideUser } from "lucide-react";
 
-export interface LoginProps {
+export interface LoginPageProps {
     errors: {
         message?: string;
     };
 }
 
-export default function Login({ errors }: LoginProps) {
+export default function LoginPage({ errors }: LoginPageProps) {
     return (
         <div className="min-h-screen flex justify-center items-center">
             <Form

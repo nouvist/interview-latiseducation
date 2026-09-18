@@ -5,14 +5,14 @@ import auth from "@/routes/auth";
 import { DefaultPageProps } from "@/types";
 import { LucideCircleX } from "lucide-react";
 
-export interface ProfilePasswordProps extends DefaultPageProps {
+export interface ProfilePasswordPageProps extends DefaultPageProps {
     errors: {
         new_password?: string;
         current_password?: string;
     };
 }
 
-export default function ProfilePassword(props: ProfilePasswordProps) {
+export default function ProfilePasswordPage(props: ProfilePasswordPageProps) {
     return (
         <Shell
             title="Profil: Ganti Kata Sandi"

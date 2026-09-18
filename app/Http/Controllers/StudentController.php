@@ -7,9 +7,25 @@ use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Student;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Response;
+use Validator;
 
 class StudentController extends Controller
 {
+    public function index()
+    {
+        return inertia('dashboard');
+    }
+
+    public function show(Student $student)
+    {
+        return inertia('student', array_merge(
+            ["student" => $student],
+            ["message" => session('message')]
+        ));
+    }
+
     public function datatables(Request $request)
     {
         $param = $request->only(['draw', 'start', 'length', 'search', 'order', 'columns']);
@@ -51,7 +67,7 @@ class StudentController extends Controller
             $query->skip($start)->take(max($length, 1));
         }
 
-        return response()->json([
+        return Response::json([
             'draw' => (int) ($param['draw'] ?? 0),
             'recordsTotal' => $total,
             'recordsFiltered' => $filtered,
@@ -61,13 +77,40 @@ class StudentController extends Controller
 
     public function create() {}
 
-    public function store(StoreStudentRequest $request) {}
+    public function store(Request $request)
+    {
+        $id = $request->input("id");
+        $validator = $this->validator($request, $id);
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
 
-    public function show(Student $student) {}
+        $student = null;
+        if ($id) {
+            $student = Student::findOrFail($id);
+            $student->update($validator->validated());
+        } else {
+            $student = Student::create($validator->validated());
+        }
+
+        return Response::redirectTo(route("students.show", $student))
+            ->with(["message" => "Berhasil disimpan."]);
+    }
 
     public function edit(Student $student) {}
 
     public function update(UpdateStudentRequest $request, Student $student) {}
 
     public function destroy(Student $student) {}
+
+
+    protected function validator(Request $request, ?int $id = null)
+    {
+        return Validator::make($request->all(), [
+            "name" => "required",
+            "email" => ["required", "email", Rule::unique('students', 'email')->ignore($id)],
+            "number" => ["required", "integer", Rule::unique('students', 'number')->ignore($id)],
+            "institution" => "required",
+        ]);
+    }
 }

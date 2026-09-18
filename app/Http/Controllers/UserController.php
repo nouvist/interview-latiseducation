@@ -10,6 +10,12 @@ use Response;
 
 class UserController extends Controller
 {
+    function index()
+    {
+        if (Auth::check()) return Response::redirectTo(route('root'));
+        return inertia('login');
+    }
+
     function login(Request $request)
     {
         $credentials = $request->validate([
@@ -24,7 +30,7 @@ class UserController extends Controller
             ]);
         }
 
-        return Response::redirectTo(route('dashboard'));
+        return Response::redirectTo(route('root'));
     }
 
     function changePassword(Request $request)
@@ -55,6 +61,6 @@ class UserController extends Controller
     function logout()
     {
         Auth::logout();
-        return Response::redirectTo(route('login'));
+        return Response::redirectTo(route('root'));
     }
 }
