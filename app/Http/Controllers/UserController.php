@@ -16,6 +16,11 @@ class UserController extends Controller
         return inertia('login');
     }
 
+    function show()
+    {
+        return inertia('profile', ['message' => session('message')]);
+    }
+
     function login(Request $request)
     {
         $credentials = $request->validate([
@@ -33,16 +38,24 @@ class UserController extends Controller
         return Response::redirectTo(route('root'));
     }
 
+    function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), ['name' => 'required']);
+        if ($validator->fails()) return back()->withErrors($validator);
+        $user = Auth::user();
+        $user->name = $validator->validated()['name'];
+        $user->save();
+
+        return back()->with(['message' => 'Berahsil disimpan.']);
+    }
+
     function changePassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'current_password' => 'required',
             'new_password' => 'required|min:8|confirmed',
         ]);
-
-        if ($validator->fails()) {
-            return Response::redirectTo(route('password'))->withErrors($validator);
-        }
+        if ($validator->fails()) return back()->withErrors($validator);
 
         $user = Auth::user();
         if (Hash::check($request->current_password, $user->password)) {

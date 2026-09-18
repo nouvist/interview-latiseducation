@@ -133,7 +133,6 @@ class StudentController extends Controller
 
     public function destroy(Student $student) {}
 
-
     protected function validator(Request $request, ?int $id = null)
     {
         return Validator::make($request->all(), [

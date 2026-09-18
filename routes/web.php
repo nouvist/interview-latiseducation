@@ -15,9 +15,10 @@ Route::controller(UserController::class)->group(function () {
     Route::post('/api/auth/login', 'login')->name('auth.login');
 
     Route::middleware('auth')->group(function () {
-        Route::inertia('/profile', 'profile')->name('profile');
+        Route::get('/profile', 'show')->name('profile');
         Route::inertia('/profile/password', 'profile.password')->name('password');
 
+        Route::post('/api/auth/update', 'store')->name('auth.store');
         Route::post('/api/auth/logout', 'logout')->name('auth.logout');
         Route::post('/api/auth/password', 'changePassword')->name('auth.password');
     });
