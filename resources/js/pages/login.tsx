@@ -2,8 +2,8 @@ import Button from "@/components/button";
 import Input from "@/components/input";
 import { cn } from "@/lib/utils";
 import auth from "@/routes/auth";
-import { Form, useForm, usePage } from "@inertiajs/react";
-import * as Lucide from "lucide-react";
+import { Form } from "@inertiajs/react";
+import { LucideCircleX, LucideLock, LucideUser } from "lucide-react";
 
 export interface LoginProps {
     errors: {
@@ -22,13 +22,13 @@ export default function Login({ errors }: LoginProps) {
                 <p className="mb-2 text-center">Supaya gampang nantinya!</p>
                 <div className="flex flex-col gap-2">
                     <Input
-                        icon={<Lucide.User />}
+                        icon={<LucideUser />}
                         type="email"
                         name="email"
                         placeholder="Surel"
                     />
                     <Input
-                        icon={<Lucide.Lock />}
+                        icon={<LucideLock />}
                         type="password"
                         name="password"
                         placeholder="Kata Sandi"
@@ -40,7 +40,7 @@ export default function Login({ errors }: LoginProps) {
                             errors.message && "flex",
                         )}
                     >
-                        <Lucide.CircleX />
+                        <LucideCircleX />
                         {errors.message}
                     </p>
                     <Button className="self-end">Masuk</Button>

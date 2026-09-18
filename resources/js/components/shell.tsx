@@ -1,7 +1,12 @@
 import { cn } from "@/lib/utils";
 import auth from "@/routes/auth";
 import { router } from "@inertiajs/react";
-import * as Lucide from "lucide-react";
+import {
+    LucideBadgeInfo,
+    LucideDatabase,
+    LucideLogOut,
+    LucideUser,
+} from "lucide-react";
 import { ComponentProps, PropsWithChildren } from "react";
 
 export enum ShellNavigation {
@@ -42,24 +47,24 @@ export default function Shell({ title, navigation, children }: ShellProps) {
                     onClick={() => handleNavigation(ShellNavigation.data)}
                     tooltip="Data Siswa"
                 >
-                    <Lucide.Database />
+                    <LucideDatabase />
                 </_Navigation>
                 <_Navigation
                     active={navigation == ShellNavigation.profile}
                     onClick={() => handleNavigation(ShellNavigation.profile)}
                     tooltip="Profil"
                 >
-                    <Lucide.User />
+                    <LucideUser />
                 </_Navigation>
                 <_Navigation
                     active={navigation == ShellNavigation.about}
                     onClick={() => handleNavigation(ShellNavigation.about)}
                     tooltip="Tentang"
                 >
-                    <Lucide.BadgeInfo />
+                    <LucideBadgeInfo />
                 </_Navigation>
                 <_Navigation tooltip="Keluar" onClick={handleLogout}>
-                    <Lucide.LogOut />
+                    <LucideLogOut />
                 </_Navigation>
             </div>
             <div className="flex-1 max-w-5xl">

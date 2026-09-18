@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Student;
 use App\Models\User;
+use Hash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -16,7 +17,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Root',
             'email' => 'root@nouvist.my.id',
-            'password' => bcrypt('ayamgorengenak1337'),
+            'password' => Hash::make('ayamgorengenak1337'),
         ]);
 
         Student::create([
@@ -122,6 +123,13 @@ class DatabaseSeeder extends Seeder
             'email' => 'tono@gmail.com',
             'number' => '2026000015',
             'organization' => 'TutorIndonesia',
+        ]);
+
+        Student::create([
+            'name' => 'Nopis Mengakui Kedaulatan Rakyat',
+            'email' => 'nouvist@outlook.com',
+            'number' => '2026000016',
+            'organization' => 'LatisEducation',
         ]);
     }
 }

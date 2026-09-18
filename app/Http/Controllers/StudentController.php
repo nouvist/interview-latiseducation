@@ -10,12 +10,6 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-    public function index()
-    {
-        if (!Auth::check()) return route('root');
-        return inertia('dashboard');
-    }
-
     public function datatables(Request $request)
     {
         $param = $request->only(['draw', 'start', 'length', 'search', 'order', 'columns']);

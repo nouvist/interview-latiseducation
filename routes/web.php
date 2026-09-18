@@ -10,14 +10,24 @@ Route::get('/', function () {
 })->name('root');
 
 Route::controller(UserController::class)->group(function () {
-    Route::get('/login', 'index')->name('login');
+    Route::get('/login', function () {
+        if (Auth::check()) return Response::redirectTo(route('dashboard'));
+        return inertia('login');
+    })->name('login');
 
     Route::post('/api/auth/login', 'login')->name('auth.login');
-    Route::post('/api/auth/logout', 'logout')->name('auth.logout');
+
+    Route::middleware('auth')->group(function () {
+        Route::inertia('/profile', 'profile')->name('profile');
+        Route::inertia('/profile/password', 'profile.password')->name('password');
+
+        Route::post('/api/auth/logout', 'logout')->name('auth.logout');
+        Route::post('/api/auth/password', 'changePassword')->name('auth.password');
+    });
 });
 
 Route::controller(StudentController::class)->middleware('auth')->group(function () {
-    Route::get('/dashboard', 'index')->name('dashboard');
+    Route::inertia('/dashboard', 'dashboard')->name('dashboard');
 
     Route::get('/api/students/datatables', 'datatables')->name('students.datatables');
 
@@ -29,5 +39,4 @@ Route::controller(StudentController::class)->middleware('auth')->group(function 
     Route::delete('/api/students/{student}', 'destroy')->name('students.destroy');
 });
 
-Route::inertia('/profile', 'profile')->name('profile');
 Route::inertia('/about', 'about')->name('about');
