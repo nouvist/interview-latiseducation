@@ -13,7 +13,7 @@ class StudentController extends Controller
 {
     public function index()
     {
-        return inertia('dashboard');
+        return inertia('dashboard', ['message' => session('message')]);
     }
 
     public function show(Student $student)
@@ -54,7 +54,7 @@ class StudentController extends Controller
             $search = $param['search']['value'];
             $query->where(function ($builder) use ($columns, $search) {
                 foreach ($columns as $column) {
-                    $builder->orWhere($column, 'like', "%{$search}%");
+                    $builder->orWhere($column, 'like', '%{$search}%');
                 }
             });
         }
@@ -109,7 +109,7 @@ class StudentController extends Controller
         }
 
         return Response::redirectTo(route('students.index', $student))
-            ->with(['message" => "Berhasil disimpan.']);
+            ->with(['message' => 'Berhasil disimpan.']);
     }
 
     public function storePhoto(Request $request)
@@ -128,10 +128,18 @@ class StudentController extends Controller
         $student->photo = $next;
         $student->save();
         return Response::redirectTo(route('students.show', $student))
-            ->with(['message" => "Foto berhasil diubah.']);
+            ->with(['message' => 'Foto berhasil diubah.']);
     }
 
-    public function destroy(Student $student) {}
+    public function destroy(Student $student)
+    {
+        $disk = Storage::disk('public');
+        if ($student->photo && $disk->exists($student->photo)) $disk->delete($student->photo);
+        $student->delete();
+
+        return Response::redirectTo(route('students.index', $student))
+            ->with(['message' => 'Berhasil dihapus.']);
+    }
 
     protected function validator(Request $request, ?int $id = null)
     {

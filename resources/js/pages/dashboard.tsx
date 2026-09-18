@@ -1,12 +1,25 @@
 import Button from "@/components/button";
 import Shell, { ShellNavigation } from "@/components/shell";
 import students from "@/routes/students";
-import { Student } from "@/types";
-import { Link } from "@inertiajs/react";
+import { DefaultPageProps, Student } from "@/types";
+import { Link, router } from "@inertiajs/react";
 import DataTable from "datatables.net-react";
-import { LucideEdit, LucidePlus, LucideUser } from "lucide-react";
+import {
+    LucideCheck,
+    LucideDelete,
+    LucideEdit,
+    LucidePlus,
+    LucideUser,
+} from "lucide-react";
 
-export default function DashboardPage() {
+export interface DashboardPageProps extends DefaultPageProps {
+    message?: string;
+}
+
+export default function DashboardPage({
+    message,
+    ...props
+}: DashboardPageProps) {
     const entrypoint = students.datatables();
     const columns = [
         { data: null, orderable: false },
@@ -30,6 +43,17 @@ export default function DashboardPage() {
                 </Link>
             }
         >
+            {message && (
+                <p
+                    className="
+                        w-full flex px-3 h-10 gap-2 mb-2 items-center
+                        border rounded-lg bg-blue-50 border-blue-400
+                    "
+                >
+                    <LucideCheck />
+                    {message}
+                </p>
+            )}
             <DataTable
                 columns={columns}
                 options={{ serverSide: true }}
@@ -56,11 +80,30 @@ export default function DashboardPage() {
                         </div>
                     ),
                     5: (student: Student) => (
-                        <Link href={students.show({ id: student.id! })}>
-                            <Button className="flex justify-center items-center w-8 h-8 p-0">
+                        <div className="flex gap-1">
+                            <Button
+                                className="flex justify-center items-center w-8 h-8 p-0"
+                                onClick={() =>
+                                    router.visit(
+                                        students.show({ id: student.id! }),
+                                    )
+                                }
+                            >
                                 <LucideEdit size={16} />
                             </Button>
-                        </Link>
+                            <Button
+                                className="flex justify-center items-center w-8 h-8 p-0"
+                                onClick={() =>
+                                    router.visit(
+                                        students.destroy({
+                                            id: student.id!,
+                                        }),
+                                    )
+                                }
+                            >
+                                <LucideDelete size={16} />
+                            </Button>
+                        </div>
                     ),
                 }}
             />
