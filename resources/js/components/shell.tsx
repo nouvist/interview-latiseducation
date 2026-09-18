@@ -7,7 +7,7 @@ import {
     LucideLogOut,
     LucideUser,
 } from "lucide-react";
-import { ComponentProps, PropsWithChildren } from "react";
+import { ComponentProps, PropsWithChildren, ReactNode } from "react";
 
 export enum ShellNavigation {
     data,
@@ -18,9 +18,15 @@ export enum ShellNavigation {
 export interface ShellProps extends PropsWithChildren {
     title?: string;
     navigation?: ShellNavigation;
+    top?: ReactNode;
 }
 
-export default function Shell({ title, navigation, children }: ShellProps) {
+export default function Shell({
+    title,
+    navigation,
+    top,
+    children,
+}: ShellProps) {
     function handleNavigation(navigation: ShellNavigation) {
         const url = {
             [ShellNavigation.data]: "/dashboard",
@@ -68,15 +74,18 @@ export default function Shell({ title, navigation, children }: ShellProps) {
                 </_Navigation>
             </div>
             <div className="flex-1 max-w-5xl">
-                <h1
-                    className="
+                <div className="flex justify-between">
+                    <h1
+                        className="
                         sticky w-max px-4 py-2 top-4 mb-2 z-0
                         border rounded-lg bg-white border-gray-400 p-1
                         text-xl font-bold
                     "
-                >
-                    {title}
-                </h1>
+                    >
+                        {title}
+                    </h1>
+                    {top}
+                </div>
                 <div>{children}</div>
             </div>
         </div>

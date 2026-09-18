@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Student;
-use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Response;
@@ -24,6 +22,11 @@ class StudentController extends Controller
             ["student" => $student],
             ["message" => session('message')]
         ));
+    }
+
+    public function create()
+    {
+        return inertia('student');
     }
 
     public function datatables(Request $request)
@@ -75,7 +78,6 @@ class StudentController extends Controller
         ]);
     }
 
-    public function create() {}
 
     public function store(Request $request)
     {
@@ -97,9 +99,6 @@ class StudentController extends Controller
             ->with(["message" => "Berhasil disimpan."]);
     }
 
-    public function edit(Student $student) {}
-
-    public function update(UpdateStudentRequest $request, Student $student) {}
 
     public function destroy(Student $student) {}
 

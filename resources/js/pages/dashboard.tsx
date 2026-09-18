@@ -4,7 +4,7 @@ import students from "@/routes/students";
 import { Student } from "@/types";
 import { Link } from "@inertiajs/react";
 import DataTable from "datatables.net-react";
-import { LucideEdit } from "lucide-react";
+import { LucideEdit, LucidePlus } from "lucide-react";
 
 export default function DashboardPage() {
     const entrypoint = students.datatables();
@@ -17,17 +17,27 @@ export default function DashboardPage() {
     ];
 
     return (
-        <Shell title="Data Siswa" navigation={ShellNavigation.data}>
+        <Shell
+            title="Data Siswa"
+            navigation={ShellNavigation.data}
+            top={
+                <Link href={students.create()}>
+                    <Button>
+                        <LucidePlus className="mr-2" />
+                        <span>Baru</span>
+                    </Button>
+                </Link>
+            }
+        >
             <DataTable
                 columns={columns}
-                options={{ serverSide: true }}
                 ajax={{
                     url: entrypoint.url,
                     type: entrypoint.method,
                 }}
                 slots={{
                     4: (student: Student) => (
-                        <Link href={students.show({ student })}>
+                        <Link href={students.show({ id: student.id! })}>
                             <Button className="flex justify-center items-center w-8 h-8 p-0">
                                 <LucideEdit size={16} />
                             </Button>

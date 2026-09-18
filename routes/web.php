@@ -32,7 +32,6 @@ Route::controller(StudentController::class)->middleware('auth')->group(function 
     Route::post('/api/students', 'store')->name('students.store');
 
     Route::get('/api/students/{student}/edit', 'edit')->name('students.edit');
-    Route::put('/api/students/{student}', 'update')->name('students.update');
     Route::delete('/api/students/{student}', 'destroy')->name('students.destroy');
 });
 
