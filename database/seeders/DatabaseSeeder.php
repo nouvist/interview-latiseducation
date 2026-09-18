@@ -17,7 +17,25 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Root',
             'email' => 'root@nouvist.my.id',
-            'password' => Hash::make('ayamgorengenak1337'),
+            'password' => Hash::make('ayamgoreng1337'),
+        ]);
+
+        User::create([
+            'name' => 'Zildan Faisal',
+            'email' => 'zildanfaisal@latiseducation.com',
+            'password' => Hash::make('ayamgoreng1337'),
+        ]);
+
+        User::create([
+            'name' => 'Galih',
+            'email' => 'galih@latiseducation.com',
+            'password' => Hash::make('ayamgoreng1337'),
+        ]);
+
+        User::create([
+            'name' => 'HRD',
+            'email' => 'hrd@latiseducation.com',
+            'password' => Hash::make('ayamgoreng1337'),
         ]);
 
         Student::create([
