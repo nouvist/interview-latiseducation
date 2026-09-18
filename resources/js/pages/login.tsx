@@ -21,7 +21,7 @@ export default function Login({ errors }: LoginProps) {
         <div className="min-h-screen flex justify-center items-center">
             <Form
                 action={auth.login()}
-                className="w-md p-4 border rounded-lg bg-white border-gray-400"
+                className="w-sm p-4 border rounded-lg bg-white border-gray-400"
             >
                 <h1 className="text-xl font-bold text-center">Masuk</h1>
                 <p className="mb-2 text-center">Supaya gampang nantinya!</p>
