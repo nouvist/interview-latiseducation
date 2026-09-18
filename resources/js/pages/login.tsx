@@ -2,7 +2,7 @@ import Button from "@/components/button";
 import Input from "@/components/input";
 import { cn } from "@/lib/utils";
 import auth from "@/routes/auth";
-import { Form, useForm } from "@inertiajs/react";
+import { Form, useForm, usePage } from "@inertiajs/react";
 import * as Lucide from "lucide-react";
 
 export interface LoginProps {
@@ -12,11 +12,6 @@ export interface LoginProps {
 }
 
 export default function Login({ errors }: LoginProps) {
-    const form = useForm(() => ({
-        email: "",
-        password: "",
-    }));
-
     return (
         <div className="min-h-screen flex justify-center items-center">
             <Form

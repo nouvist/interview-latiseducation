@@ -1,46 +1,29 @@
 import Shell, { ShellNavigation } from "@/components/shell";
+import students from "@/routes/students";
 import DataTable from "datatables.net-react";
 import { Fragment } from "react/jsx-runtime";
 
 export default function Dashboard() {
+    const entrypoint = students.datatables();
     const columns = [
         { title: "Nama", data: "name" },
-        { title: "Lembaga Siswa", data: "org" },
-        { title: "NIS", data: "nis" },
+        { title: "Lembaga Siswa", data: "organization" },
+        { title: "NIS", data: "number" },
         { title: "Surel", data: "email" },
         { title: "aksi", data: null, orderable: false },
-    ];
-
-    const data = [
-        {
-            name: "Ayam Goreng",
-            org: "LatisEducation",
-            nis: "2026001",
-            email: "ayam.goreng@latiseducation.com",
-        },
-        {
-            name: "Galon Isi Ulang",
-            org: "TutorIndonesia",
-            nis: "2026002",
-            email: "galon.isi.ulang@tutorindonesia.com",
-        },
-        {
-            name: "Yanto",
-            org: "LatisEducation",
-            nis: "2026003",
-            email: "yanto@latiseducation.com",
-        },
     ];
 
     return (
         <Shell title="Data Siswa" navigation={ShellNavigation.data}>
             <DataTable
                 columns={columns}
-                data={data}
+                options={{ serverSide: true }}
+                ajax={{
+                    url: entrypoint.url,
+                    type: entrypoint.method,
+                }}
                 slots={{
-                    4: (item: (typeof data)[number]) => (
-                        <Fragment>galon</Fragment>
-                    ),
+                    4: () => <Fragment>galon</Fragment>,
                 }}
             />
         </Shell>
