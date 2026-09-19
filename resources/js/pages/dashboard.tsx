@@ -7,19 +7,19 @@ import DataTable from "datatables.net-react";
 import {
     LucideCheck,
     LucideDelete,
+    LucideDownload,
     LucideEdit,
     LucidePlus,
     LucideUser,
 } from "lucide-react";
+import { useRef } from "react";
 
 export interface DashboardPageProps extends DefaultPageProps {
     message?: string;
 }
 
-export default function DashboardPage({
-    message,
-    ...props
-}: DashboardPageProps) {
+export default function DashboardPage({ message }: DashboardPageProps) {
+    const search = useRef("");
     const entrypoint = students.datatables();
     const columns = [
         { data: null, orderable: false },
@@ -30,17 +30,29 @@ export default function DashboardPage({
         { data: null, orderable: false },
     ];
 
+    function handleExcel() {
+        location.href = students.excel({
+            query: { search: search.current },
+        }).url;
+    }
+
     return (
         <Shell
             title="Data Siswa"
             navigation={ShellNavigation.data}
             top={
-                <Link href={students.create()}>
-                    <Button>
-                        <LucidePlus className="mr-2" />
-                        <span>Baru</span>
+                <div className="flex gap-2">
+                    <Button onClick={handleExcel}>
+                        <LucideDownload className="mr-2" />
+                        <span>Unduh Excel</span>
                     </Button>
-                </Link>
+                    <Link href={students.create()}>
+                        <Button>
+                            <LucidePlus className="mr-2" />
+                            <span>Baru</span>
+                        </Button>
+                    </Link>
+                </div>
             }
         >
             {message && (
@@ -60,6 +72,9 @@ export default function DashboardPage({
                 ajax={{
                     url: entrypoint.url,
                     type: entrypoint.method,
+                    beforeSend: (_, { data }) => {
+                        search.current = (data as any)["search"]["value"];
+                    },
                 }}
                 slots={{
                     0: (student: Student) => (

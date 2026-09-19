@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Response;
 use Storage;
 use Validator;
@@ -92,13 +95,70 @@ class StudentController extends Controller
         ]);
     }
 
+    public function excel(Request $request)
+    {
+        $param = $request->only(['search']);
+
+        $query = Student::query();
+        $columns = new Student()->getFillable();
+        $headings = [
+            'name'        => 'Nama',
+            'institution' => 'Lembaga Siswa',
+            'number'      => 'NIS',
+            'email'       => 'Surel',
+        ];
+
+        if (!empty($param['search']['value'])) {
+            $search = $param['search']['value'];
+            $query->where(function ($builder) use ($columns, $search) {
+                foreach ($columns as $column) {
+                    $builder->orWhere($column, 'like', "%{$search}%");
+                }
+            });
+        }
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Data Siswa');
+
+        $sheet->fromArray(array_values($headings), null, 'A1');
+
+        $row = 2;
+        $fields = array_keys($headings);
+
+        $query->chunkById(500, function ($students) use ($sheet, &$row, $fields) {
+            foreach ($students as $student) {
+                foreach ($fields as $index => $field) {
+                    $sheet->setCellValueExplicit(
+                        [$index + 1, $row],
+                        (string) $student->{$field},
+                        DataType::TYPE_STRING
+                    );
+                }
+                $row++;
+            }
+        });
+
+        $lastCol = chr(64 + count($fields)); // D
+        $sheet->getStyle("A1:{$lastCol}1")->getFont()->setBold(true);
+        $sheet->freezePane('A2');
+        foreach (range('A', $lastCol) as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        $fileName = 'siswa-' . now()->format('Ymd_His') . '.xlsx';
+        return Response::streamDownload(
+            fn() => (new Xlsx($spreadsheet))->save('php://output'),
+            $fileName,
+            ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+        );
+    }
 
     public function store(Request $request)
     {
         $id = $request->input('id');
         $validator = $this->validator($request, $id);
         if ($validator->fails()) return back()->withErrors($validator);
-
 
         $student = null;
         if ($id) {
